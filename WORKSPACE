@@ -17,11 +17,9 @@ workspace(name = "com_google_tcmalloc")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Abseil
-http_archive(
+local_repository(
     name = "com_google_absl",
-    urls = ["https://github.com/abseil/abseil-cpp/archive/b3162b1da62711c663d0025e2eabeb83fd1f2728.zip"],
-    strip_prefix = "abseil-cpp-b3162b1da62711c663d0025e2eabeb83fd1f2728",
-    sha256 = "d5c91248c33269fcc7ab35897315a45cfa2c37abb4c6d4ed36cb5c82f366367a",
+    path = "../abseil-0064d9d-yb-1",
 )
 
 # GoogleTest/GoogleMock framework. Used by most unit-tests.

@@ -36,7 +36,7 @@ cc_library(
     deps = [
         ":config",
         ":logging",
-        "@com_google_absl//absl/types:span",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -47,7 +47,7 @@ cc_test(
     deps = [
         ":affinity",
         ":percpu",
-        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -69,7 +69,7 @@ cc_library(
     ],
     deps = [
         ":config",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -82,9 +82,7 @@ cc_library(
     ],
     deps = [
         ":config",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/functional:function_ref",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -96,8 +94,7 @@ cc_library(
         "//tcmalloc:__subpackages__",
     ],
     deps = [
-        "@com_google_absl//absl/base:config",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -149,8 +146,7 @@ cc_library(
     ],
     deps = [
         "//tcmalloc:malloc_extension",
-        "@com_google_absl//absl/functional:function_ref",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -163,13 +159,7 @@ cc_library(
     ],
     deps = [
         ":linked_list",
-        "@com_google_absl//absl/algorithm:container",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/base:malloc_internal",
-        "@com_google_absl//absl/debugging:stacktrace",
-        "@com_google_absl//absl/hash",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -180,9 +170,7 @@ cc_test(
     deps = [
         ":lifetime_predictions",
         "//tcmalloc/testing:testutil",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/hash:hash_testing",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -197,14 +185,7 @@ cc_library(
         ":clock",
         ":lifetime_predictions",
         ":linked_list",
-        "@com_google_absl//absl/algorithm:container",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/base:malloc_internal",
-        "@com_google_absl//absl/debugging:stacktrace",
-        "@com_google_absl//absl/hash",
-        "@com_google_absl//absl/memory",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -215,9 +196,7 @@ cc_test(
     deps = [
         ":lifetime_predictions",
         ":lifetime_tracker",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -231,7 +210,7 @@ cc_library(
     ],
     deps = [
         ":logging",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -245,7 +224,7 @@ create_tcmalloc_benchmark(
         ":logging",
         ":mock_span",
         "@com_github_google_benchmark//:benchmark",
-        "@com_google_absl//absl/random",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -258,8 +237,7 @@ cc_test(
     deps = [
         ":linked_list",
         ":mock_span",
-        "@com_google_absl//absl/container:flat_hash_set",
-        "@com_google_absl//absl/random",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -283,12 +261,7 @@ cc_library(
         ":config",
         ":parameter_accessors",
         "//tcmalloc:malloc_extension",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/debugging:stacktrace",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/strings:str_format",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -300,7 +273,7 @@ cc_test(
     ],
     deps = [
         ":logging",
-        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -326,7 +299,7 @@ cc_library(
         ":logging",
         ":page_size",
         ":util",
-        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -336,7 +309,7 @@ cc_test(
     copts = TCMALLOC_DEFAULT_COPTS,
     deps = [
         ":memory_stats",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -365,8 +338,7 @@ cc_library(
         ":config",
         ":page_size",
         ":util",
-        "@com_google_absl//absl/status",
-        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -379,7 +351,7 @@ create_tcmalloc_benchmark(
         ":mincore",
         ":page_size",
         "@com_github_google_benchmark//:benchmark",
-        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -405,7 +377,7 @@ cc_test(
         ":page_size",
         ":residency",
         "@com_github_google_benchmark//:benchmark",
-        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -432,10 +404,7 @@ cc_library(
         ":config",
         ":logging",
         ":util",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/functional:function_ref",
-        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -446,8 +415,7 @@ cc_test(
     linkstatic = 1,
     deps = [
         ":cache_topology",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/types:span",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -466,11 +434,7 @@ cc_library(
         ":logging",
         ":percpu",
         ":util",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/functional:function_ref",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/types:optional",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -493,9 +457,7 @@ cc_test(
         ":logging",
         ":numa",
         "//tcmalloc:want_numa_aware",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/types:span",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -509,7 +471,7 @@ cc_library(
     ],
     deps = [
         ":logging",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -522,7 +484,7 @@ cc_library(
     ],
     deps = [
         ":config",
-        "@com_google_absl//absl/base:config",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -536,7 +498,7 @@ cc_library(
     ],
     deps = [
         ":config",
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -549,8 +511,7 @@ cc_library(
         "//tcmalloc:__subpackages__",
     ],
     deps = [
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -575,9 +536,7 @@ cc_library(
         ":logging",
         ":optimization",
         ":util",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/base:dynamic_annotations",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -591,10 +550,7 @@ cc_library(
     deps = [
         ":mincore",
         ":percpu",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/base:dynamic_annotations",
-        "@com_google_absl//absl/functional:function_ref",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -615,17 +571,7 @@ cc_test(
         "//tcmalloc:malloc_extension",
         "//tcmalloc/testing:testutil",
         "@com_github_google_benchmark//:benchmark",
-        "@com_google_absl//absl/algorithm:container",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/container:fixed_array",
-        "@com_google_absl//absl/container:flat_hash_set",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:seed_sequences",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/synchronization",
-        "@com_google_absl//absl/time",
-        "@com_google_absl//absl/types:span",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -652,16 +598,7 @@ cc_library(
         ":residency",
         "//tcmalloc:malloc_extension",
         "//tcmalloc/internal:profile_cc_proto",
-        "@com_google_absl//absl/base:config",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/container:btree",
-        "@com_google_absl//absl/container:flat_hash_map",
-        "@com_google_absl//absl/numeric:bits",
-        "@com_google_absl//absl/status",
-        "@com_google_absl//absl/status:statusor",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/time",
-        "@com_google_absl//absl/types:span",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -689,10 +626,7 @@ cc_test(
         ":profile_builder",
         "//tcmalloc:malloc_extension",
         "//tcmalloc/internal:profile_cc_proto",
-        "@com_google_absl//absl/container:flat_hash_set",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/time",
-        "@com_google_absl//absl/types:variant",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -709,8 +643,7 @@ cc_library(
         ":config",
         ":logging",
         ":util",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -724,7 +657,7 @@ cc_library(
     deps = [
         ":logging",
         ":optimization",
-        "@com_google_absl//absl/numeric:bits",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -736,10 +669,7 @@ create_tcmalloc_benchmark(
     deps = [
         ":range_tracker",
         "@com_github_google_benchmark//:benchmark",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/container:fixed_array",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:distributions",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -750,10 +680,7 @@ cc_test(
     linkstatic = 1,
     deps = [
         ":range_tracker",
-        "@com_google_absl//absl/base:core_headers",
-        "@com_google_absl//absl/container:fixed_array",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:distributions",
+        "@com_google_absl//absl:absl_shared",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -778,11 +705,7 @@ cc_library(
     deps = [
         ":clock",
         ":logging",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/functional:function_ref",
-        "@com_google_absl//absl/numeric:bits",
-        "@com_google_absl//absl/numeric:int128",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
 
@@ -807,7 +730,6 @@ cc_library(
     deps = [
         ":config",
         ":logging",
-        "@com_google_absl//absl/base",
-        "@com_google_absl//absl/time",
+        "@com_google_absl//absl:absl_shared",
     ],
 )
