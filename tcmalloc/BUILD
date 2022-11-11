@@ -1337,7 +1337,7 @@ cc_library(
     copts = ["-g0"] + TCMALLOC_DEFAULT_COPTS,
     visibility = ["//visibility:public"],
     deps = [
-        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl:absl_shared",
     ],
     alwayslink = 1,
 )
