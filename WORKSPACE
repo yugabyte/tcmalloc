@@ -28,7 +28,7 @@ http_archive(
 # Abseil
 local_repository(
     name = "com_google_absl",
-    path = "../abseil-0064d9d-yb-1",
+    path = "../abseil-0064d9d-yb-2",
 )
 
 # GoogleTest/GoogleMock framework. Used by most unit-tests.
