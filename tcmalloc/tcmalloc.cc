@@ -316,9 +316,6 @@ extern "C" size_t MallocExtension_Internal_ReleaseMemoryToSystemEx(
   // memory at a constant rate.
   ABSL_CONST_INIT static size_t extra_bytes_released;
 
-  if (num_bytes == 0)
-    return 0;
-
   absl::base_internal::SpinLockHolder rh(&release_lock);
 
   absl::base_internal::SpinLockHolder h(&pageheap_lock);
