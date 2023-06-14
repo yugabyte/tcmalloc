@@ -309,7 +309,7 @@ class DeallocationProfiler {
   std::unique_ptr<DeallocationStackTraceTable> reports_ = nullptr;
 
  public:
-  explicit DeallocationProfiler(DeallocationProfilerList* list, bool seed_with_live_allocs = true):
+  explicit DeallocationProfiler(DeallocationProfilerList* list, bool seed_with_live_allocs):
       list_(list) {
     reports_ = std::make_unique<DeallocationStackTraceTable>();
     list_->Add(this, seed_with_live_allocs);

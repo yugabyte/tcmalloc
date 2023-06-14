@@ -47,7 +47,7 @@ class DeallocationProfilerList {
 class DeallocationSample final
     : public tcmalloc_internal::AllocationProfilingTokenBase {
  public:
-  explicit DeallocationSample(DeallocationProfilerList* list, bool seed_with_live_allocs = true);
+  explicit DeallocationSample(DeallocationProfilerList* list, bool seed_with_live_allocs);
   // We define the dtor to ensure it is placed in the desired text section.
   ~DeallocationSample() override = default;
 
