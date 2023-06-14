@@ -549,7 +549,7 @@ class MallocExtension final {
 
   // Start recording lifetimes of objects live during this profiling
   // session. Returns null if the implementation does not support profiling.
-  static AllocationProfilingToken StartLifetimeProfiling();
+  static AllocationProfilingToken StartLifetimeProfiling(bool seed_with_live_allocs);
 
   // Runs housekeeping actions for the allocator off of the main allocation path
   // of new/delete.  As of 2020, this includes:

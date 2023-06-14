@@ -245,9 +245,9 @@ MallocExtension_Internal_StartAllocationProfiling() {
 }
 
 extern "C" tcmalloc_internal::AllocationProfilingTokenBase*
-MallocExtension_Internal_StartLifetimeProfiling() {
+MallocExtension_Internal_StartLifetimeProfiling(bool seed_with_live_allocs) {
   return new deallocationz::DeallocationSample(
-      &tc_globals.deallocation_samples);
+      &tc_globals.deallocation_samples, seed_with_live_allocs);
 }
 
 MallocExtension::Ownership GetOwnership(const void* ptr) {

@@ -195,7 +195,7 @@ MallocExtension::StartAllocationProfiling() {
 }
 
 MallocExtension::AllocationProfilingToken
-MallocExtension::StartLifetimeProfiling() {
+MallocExtension::StartLifetimeProfiling(bool seed_with_live_allocs) {
 #if ABSL_INTERNAL_HAVE_WEAK_MALLOCEXTENSION_STUBS
   if (&MallocExtension_Internal_StartLifetimeProfiling == nullptr) {
     return {};
@@ -203,7 +203,7 @@ MallocExtension::StartLifetimeProfiling() {
 
   return tcmalloc_internal::AllocationProfilingTokenAccessor::MakeToken(
       std::unique_ptr<tcmalloc_internal::AllocationProfilingTokenBase>(
-          MallocExtension_Internal_StartLifetimeProfiling()));
+          MallocExtension_Internal_StartLifetimeProfiling(seed_with_live_allocs)));
 #else
   return {};
 #endif

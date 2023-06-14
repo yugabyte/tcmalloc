@@ -84,7 +84,7 @@ TEST(LifetimeProfiler, BasicCounterValues) {
 
   void *ptr = nullptr;
 
-  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling();
+  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling(true);
 
   // Perform four allocation/deallocation pairs. The first batch should get
   // merged into one sample, the second batch into two different samples.
@@ -195,7 +195,7 @@ TEST(LifetimeProfiler, RecordLiveAllocations) {
   void *ptr = SingleAlloc(kAllocFrames, kMallocSize);
   absl::SleepFor(kDuration);
 
-  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling();
+  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling(true);
   SingleDealloc(kDeallocFrames, ptr);
   const tcmalloc::Profile profile = std::move(token).Stop();
 
@@ -252,7 +252,7 @@ TEST(LifetimeProfiler, RecordCensoredAllocations) {
   // Allocated prior to profiling.
   void *ptr1 = SingleAlloc(kAllocFrames, kMallocSize1);
 
-  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling();
+  auto token = tcmalloc::MallocExtension::StartLifetimeProfiling(true);
 
   // Change the requested size so that it always shows up as a different sample.
   void *ptr2 = SingleAlloc(kAllocFrames, kMallocSize2);

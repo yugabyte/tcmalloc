@@ -309,9 +309,10 @@ class DeallocationProfiler {
   std::unique_ptr<DeallocationStackTraceTable> reports_ = nullptr;
 
  public:
-  explicit DeallocationProfiler(DeallocationProfilerList* list) : list_(list) {
+  explicit DeallocationProfiler(DeallocationProfilerList* list, bool seed_with_live_allocs):
+      list_(list) {
     reports_ = std::make_unique<DeallocationStackTraceTable>();
-    list_->Add(this);
+    list_->Add(this, seed_with_live_allocs);
   }
 
   ~DeallocationProfiler() {
@@ -379,17 +380,19 @@ class DeallocationProfiler {
   }
 };
 
-void DeallocationProfilerList::Add(DeallocationProfiler* profiler) {
+void DeallocationProfilerList::Add(DeallocationProfiler* profiler, bool seed_with_live_allocs) {
   SpinLockHolder h(&profilers_lock_);
   profiler->next_ = first_;
   first_ = profiler;
 
-  // Whenever a new profiler is created, we seed it with live allocations.
-  tcmalloc_internal::tc_globals.sampled_allocation_recorder().Iterate(
-      [profiler](
-          const tcmalloc_internal::SampledAllocation& sampled_allocation) {
-        profiler->ReportMalloc(sampled_allocation.sampled_stack);
-      });
+  if (seed_with_live_allocs) {
+    // Whenever a new profiler is created, we seed it with live allocations.
+    tcmalloc_internal::tc_globals.sampled_allocation_recorder().Iterate(
+        [profiler](
+            const tcmalloc_internal::SampledAllocation& sampled_allocation) {
+          profiler->ReportMalloc(sampled_allocation.sampled_stack);
+        });
+  }
 }
 
 // This list is very short and we're nowhere near a hot path, just walk
@@ -559,8 +562,8 @@ void DeallocationProfiler::DeallocationStackTraceTable::Iterate(
   }
 }
 
-DeallocationSample::DeallocationSample(DeallocationProfilerList* list) {
-  profiler_ = std::make_unique<DeallocationProfiler>(list);
+DeallocationSample::DeallocationSample(DeallocationProfilerList* list, bool seed_with_live_allocs) {
+  profiler_ = std::make_unique<DeallocationProfiler>(list, seed_with_live_allocs);
 }
 
 tcmalloc::Profile DeallocationSample::Stop() && {

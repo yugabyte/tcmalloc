@@ -35,7 +35,7 @@ class DeallocationProfilerList {
 
   void ReportMalloc(const tcmalloc_internal::StackTrace& stack_trace);
   void ReportFree(tcmalloc_internal::AllocHandle handle);
-  void Add(DeallocationProfiler* profiler);
+  void Add(DeallocationProfiler* profiler, bool seed_with_live_allocs);
   void Remove(DeallocationProfiler* profiler);
 
  private:
@@ -47,7 +47,7 @@ class DeallocationProfilerList {
 class DeallocationSample final
     : public tcmalloc_internal::AllocationProfilingTokenBase {
  public:
-  explicit DeallocationSample(DeallocationProfilerList* list);
+  explicit DeallocationSample(DeallocationProfilerList* list, bool seed_with_live_allocs);
   // We define the dtor to ensure it is placed in the desired text section.
   ~DeallocationSample() override = default;
 
