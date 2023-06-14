@@ -127,7 +127,7 @@ TEST(DeallocationSampleTest, RaceToClaim) {
     counter.DecrementCount();
 
     while (!stop) {
-      auto token = MallocExtension::StartLifetimeProfiling();
+      auto token = MallocExtension::StartLifetimeProfiling(true);
       absl::SleepFor(absl::Microseconds(1));
       auto profile = std::move(token).Stop();
     }
