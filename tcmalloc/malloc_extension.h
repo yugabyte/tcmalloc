@@ -581,7 +581,7 @@ class MallocExtension final {
   // Returns true if the current thread is inside allocation or deallocation
   // code. Useful when implementing signal handlers to avoid operations that
   // that might interfere with rseq or tcmalloc internals.
-  static bool IsInAllocDealloc();
+  static bool IsCurThreadInAllocDealloc();
 };
 
 }  // namespace tcmalloc

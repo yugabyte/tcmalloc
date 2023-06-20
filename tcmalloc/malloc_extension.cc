@@ -499,13 +499,13 @@ void MallocExtension::SetBackgroundReleaseRate(BytesPerSecond rate) {
 #endif
 }
 
-bool MallocExtension::IsInAllocDealloc() {
+bool MallocExtension::IsCurThreadInAllocDealloc() {
 #if ABSL_INTERNAL_HAVE_WEAK_MALLOCEXTENSION_STUBS
-  if (&MallocExtension_Internal_IsInAllocDealloc == nullptr) {
+  if (&MallocExtension_Internal_IsCurThreadInAllocDealloc == nullptr) {
     return false;
   }
 
-  return MallocExtension_Internal_IsInAllocDealloc();
+  return MallocExtension_Internal_IsCurThreadInAllocDealloc();
 #else
   return false;
 #endif

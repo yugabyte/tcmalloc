@@ -782,11 +782,11 @@ inline ABSL_ATTRIBUTE_ALWAYS_INLINE void do_free_with_size_class(
 class ScopedAllocDeallocFlagSetter {
  public:
   ScopedAllocDeallocFlagSetter() {
-    Static::set_is_in_alloc_dealloc(true);
+    Static::set_is_cur_thread_in_alloc_dealloc(true);
   }
 
   ~ScopedAllocDeallocFlagSetter() {
-    Static::set_is_in_alloc_dealloc(false);
+    Static::set_is_cur_thread_in_alloc_dealloc(false);
   }
 
   ScopedAllocDeallocFlagSetter(const ScopedAllocDeallocFlagSetter&) = delete;
