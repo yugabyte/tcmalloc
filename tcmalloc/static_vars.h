@@ -180,10 +180,12 @@ class Static final {
   // structure, so figure out how much of it is actually resident.
   static size_t pagemap_residence();
 
-  static bool is_cur_thread_in_alloc_dealloc() { return is_cur_thread_in_alloc_dealloc_; }
+  static int64_t cur_thread_in_alloc_dealloc_counter() {
+    return cur_thread_in_alloc_dealloc_counter_;
+  }
 
-  static void set_is_cur_thread_in_alloc_dealloc(bool value) {
-    is_cur_thread_in_alloc_dealloc_ = value;
+  static void add_to_cur_thread_in_alloc_dealloc_counter(int64_t delta) {
+    cur_thread_in_alloc_dealloc_counter_ += delta;
   }
 
  private:
@@ -233,10 +235,12 @@ class Static final {
   static ExplicitlyConstructed<SampledAllocationRecorder>
       sampled_allocation_recorder_;
 
-  // We set this thread-local variable to true while we are inside memory
-  // allocation or deallocation functions. The application can use this to avoid
-  // risky operations in signal handlers that might interrupt malloc/free.
-  static thread_local bool is_cur_thread_in_alloc_dealloc_;
+  // We increment this thread-local variable to true while we enter memory
+  // allocation or deallocation functions, and decrement it when those functions
+  // return. The application can use this to avoid risky operations in signal
+  // handlers that might interrupt malloc/free. This is never expected to
+  // be more than 1 but we use a counter anyway.
+  static thread_local int64_t cur_thread_in_alloc_dealloc_counter_;
 };
 
 ABSL_CONST_INIT extern Static tc_globals;
