@@ -577,6 +577,11 @@ class MallocExtension final {
   // Specifies the release rate from the page heap.  ProcessBackgroundActions
   // must be called for this to be operative.
   static void SetBackgroundReleaseRate(BytesPerSecond rate);
+
+  // Returns true if the current thread is inside allocation or deallocation
+  // code. Useful when implementing signal handlers to avoid operations that
+  // that might interfere with rseq or tcmalloc internals.
+  static bool IsInAllocDealloc();
 };
 
 }  // namespace tcmalloc

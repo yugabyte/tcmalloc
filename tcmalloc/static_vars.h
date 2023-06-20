@@ -180,6 +180,12 @@ class Static final {
   // structure, so figure out how much of it is actually resident.
   static size_t pagemap_residence();
 
+  static bool is_in_alloc_dealloc() { return is_in_alloc_dealloc_; }
+
+  static void set_is_in_alloc_dealloc(bool value) {
+    is_in_alloc_dealloc_ = value;
+  }
+
  private:
 #if defined(__clang__)
   __attribute__((preserve_most))
@@ -226,6 +232,11 @@ class Static final {
   // the global pageheap_lock.
   static ExplicitlyConstructed<SampledAllocationRecorder>
       sampled_allocation_recorder_;
+
+  // We set this thread-local variable to true while we are inside memory
+  // allocation or deallocation functions. The application can use this to avoid
+  // risky operations in signal handlers that might interrupt malloc/free.
+  static thread_local bool is_in_alloc_dealloc_;
 };
 
 ABSL_CONST_INIT extern Static tc_globals;
