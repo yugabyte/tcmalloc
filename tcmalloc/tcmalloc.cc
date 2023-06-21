@@ -733,6 +733,22 @@ static size_t GetSizeClass(void* ptr) {
 }
 #endif
 
+class ScopedAllocDeallocCounterModifier {
+ public:
+  ScopedAllocDeallocCounterModifier() {
+    Static::add_to_cur_thread_in_alloc_dealloc_counter(1);
+  }
+
+  ~ScopedAllocDeallocCounterModifier() {
+    Static::add_to_cur_thread_in_alloc_dealloc_counter(-1);
+  }
+
+  ScopedAllocDeallocCounterModifier(const ScopedAllocDeallocCounterModifier&) = delete;
+  ScopedAllocDeallocCounterModifier& operator=(const ScopedAllocDeallocCounterModifier&) = delete;
+  ScopedAllocDeallocCounterModifier(ScopedAllocDeallocCounterModifier&& other) = delete;
+  ScopedAllocDeallocCounterModifier& operator=(ScopedAllocDeallocCounterModifier&& other) = delete;
+};
+
 // Helper for the object deletion (free, delete, etc.).  Inputs:
 //   ptr is object to be freed
 //   size_class is the size class of that object, or 0 if it's unknown
@@ -747,6 +763,7 @@ static size_t GetSizeClass(void* ptr) {
 template <bool have_size_class, Hooks hooks_state>
 inline ABSL_ATTRIBUTE_ALWAYS_INLINE void do_free_with_size_class(
     void* ptr, size_t size_class) {
+  ScopedAllocDeallocCounterModifier counter_modifier;
   // !have_size_class -> size_class == 0
   ASSERT(have_size_class || size_class == 0);
 
@@ -801,6 +818,8 @@ template <typename AlignPolicy>
 inline ABSL_ATTRIBUTE_ALWAYS_INLINE void do_free_with_size(void* ptr,
                                                            size_t size,
                                                            AlignPolicy align) {
+  ScopedAllocDeallocCounterModifier counter_modifier;
+
   ASSERT(CorrectSize(ptr, size, align));
   ASSERT(CorrectAlignment(ptr, static_cast<std::align_val_t>(align.align())));
 
@@ -1019,6 +1038,8 @@ using tcmalloc::tcmalloc_internal::ThreadCache;
 template <typename Policy, typename CapacityPtr = std::nullptr_t>
 static void* ABSL_ATTRIBUTE_SECTION(google_malloc)
     slow_alloc(Policy policy, size_t size, CapacityPtr capacity = nullptr) {
+  tcmalloc::tcmalloc_internal::ScopedAllocDeallocCounterModifier
+      counter_modifier;
   tc_globals.InitIfNecessary();
   GetThreadSampler()->UpdateFastPathState();
   void* p;
@@ -1040,6 +1061,8 @@ static void* ABSL_ATTRIBUTE_SECTION(google_malloc)
 template <typename Policy, typename CapacityPtr = std::nullptr_t>
 static inline void* ABSL_ATTRIBUTE_ALWAYS_INLINE
 fast_alloc(Policy policy, size_t size, CapacityPtr capacity = nullptr) {
+  tcmalloc::tcmalloc_internal::ScopedAllocDeallocCounterModifier
+      counter_modifier;
   // If size is larger than kMaxSize, it's not fast-path anymore. In
   // such case, GetSizeClass will return false, and we'll delegate to the slow
   // path. If malloc is not yet initialized, we may end up with size_class == 0
