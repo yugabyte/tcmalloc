@@ -133,6 +133,8 @@ TCMALLOC_ATTRIBUTE_NO_DESTROY ABSL_CONST_INIT
     SystemAllocator<NumaTopology<kNumaPartitions, kNumBaseClasses>>
         Static::system_allocator_{numa_topology_};
 
+ABSL_CONST_INIT thread_local int64_t
+    Static::cur_thread_in_alloc_dealloc_counter_ = 0;
 // LINT.ThenChange(:static_vars_size)
 
 ABSL_CONST_INIT Static tc_globals;
@@ -159,7 +161,8 @@ size_t Static::metadata_bytes() {
       sizeof(sampled_alloc_handle_generator) + sizeof(peak_heap_tracker_) +
       sizeof(guardedpage_allocator_) + sizeof(numa_topology_) +
       sizeof(CacheTopology::Instance()) + sizeof(mismatched_delete_state_) +
-      sizeof(system_allocator_);
+      sizeof(system_allocator_) +
+      sizeof(cur_thread_in_alloc_dealloc_counter_);
   // LINT.ThenChange(:static_vars)
 
   const size_t allocated = arena().stats().bytes_allocated +
@@ -240,4 +243,10 @@ ABSL_ATTRIBUTE_COLD ABSL_ATTRIBUTE_NOINLINE void Static::SlowInitIfNecessary() {
 
 }  // namespace tcmalloc_internal
 }  // namespace tcmalloc
+
+extern "C" bool MallocExtension_Internal_IsCurThreadInAllocDealloc() {
+  return tcmalloc::tcmalloc_internal::Static::
+         cur_thread_in_alloc_dealloc_counter() > 0;
+}
+
 GOOGLE_MALLOC_SECTION_END

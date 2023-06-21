@@ -678,6 +678,22 @@ static void InvokeHooksAndFreePages(void* ptr, std::optional<size_t> size) {
   }
 }
 
+class ScopedAllocDeallocCounterModifier {
+ public:
+  ScopedAllocDeallocCounterModifier() {
+    Static::add_to_cur_thread_in_alloc_dealloc_counter(1);
+  }
+
+  ~ScopedAllocDeallocCounterModifier() {
+    Static::add_to_cur_thread_in_alloc_dealloc_counter(-1);
+  }
+
+  ScopedAllocDeallocCounterModifier(const ScopedAllocDeallocCounterModifier&) = delete;
+  ScopedAllocDeallocCounterModifier& operator=(const ScopedAllocDeallocCounterModifier&) = delete;
+  ScopedAllocDeallocCounterModifier(ScopedAllocDeallocCounterModifier&& other) = delete;
+  ScopedAllocDeallocCounterModifier& operator=(ScopedAllocDeallocCounterModifier&& other) = delete;
+};
+
 // Helper for the object deletion (free, delete, etc.).  Inputs:
 //   ptr is object to be freed
 //   size_class is the size class of that object, or 0 if it's unknown
@@ -690,6 +706,7 @@ static void InvokeHooksAndFreePages(void* ptr, std::optional<size_t> size) {
 // "have_size_class-case" and others are "!have_size_class-case". But we
 // certainly don't have such compiler. See also do_free_with_size below.
 inline ABSL_ATTRIBUTE_ALWAYS_INLINE void do_free(void* ptr) {
+  ScopedAllocDeallocCounterModifier counter_modifier;
   if (!kSelSanPresent || ABSL_PREDICT_FALSE(!IsNormalMemory(ptr))) {
     if (ABSL_PREDICT_FALSE(ptr == nullptr)) {
       return;
@@ -748,6 +765,8 @@ template <typename AlignPolicy>
 inline ABSL_ATTRIBUTE_ALWAYS_INLINE void do_free_with_size(void* ptr,
                                                            size_t size,
                                                            AlignPolicy align) {
+  ScopedAllocDeallocCounterModifier counter_modifier;
+
   TC_ASSERT(
       CorrectAlignment(ptr, static_cast<std::align_val_t>(align.align())));
 
@@ -967,6 +986,8 @@ __attribute__((flatten))
 #endif
 ABSL_ATTRIBUTE_NOINLINE static typename Policy::pointer_type
 slow_alloc_small(size_t size, uint32_t size_class, Policy policy) {
+  tcmalloc::tcmalloc_internal::ScopedAllocDeallocCounterModifier
+      counter_modifier;
   size_t weight = GetThreadSampler()->RecordedAllocationFast(size);
   if (ABSL_PREDICT_FALSE(weight != 0) ||
       ABSL_PREDICT_FALSE(tcmalloc::tcmalloc_internal::Static::HaveHooks()) ||
@@ -983,6 +1004,8 @@ slow_alloc_small(size_t size, uint32_t size_class, Policy policy) {
 template <typename Policy>
 ABSL_ATTRIBUTE_NOINLINE static typename Policy::pointer_type slow_alloc_large(
     size_t size, Policy policy) {
+  tcmalloc::tcmalloc_internal::ScopedAllocDeallocCounterModifier
+      counter_modifier;
   size_t weight = GetThreadSampler()->RecordAllocation(size);
   __sized_ptr_t res = do_malloc_pages(size, weight, policy);
   if (ABSL_PREDICT_FALSE(res.p == nullptr)) return policy.handle_oom(size);

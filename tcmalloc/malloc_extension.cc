@@ -818,6 +818,18 @@ void MallocExtension::SetBackgroundReleaseRate(BytesPerSecond rate) {
 #endif
 }
 
+bool MallocExtension::IsCurThreadInAllocDealloc() {
+#if ABSL_INTERNAL_HAVE_WEAK_MALLOCEXTENSION_STUBS
+  if (&MallocExtension_Internal_IsCurThreadInAllocDealloc == nullptr) {
+    return false;
+  }
+
+  return MallocExtension_Internal_IsCurThreadInAllocDealloc();
+#else
+  return false;
+#endif
+}
+
 }  // namespace tcmalloc
 
 // Default implementation just returns size. The expectation is that
