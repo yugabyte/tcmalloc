@@ -176,7 +176,6 @@ class LifetimeDatabase {
   }
 
  protected:
-  static const int kMaxStackDepth = 64;
 
   static absl::base_internal::LowLevelAlloc::Arena* GetArena() {
     static absl::base_internal::LowLevelAlloc::Arena* arena =
