@@ -394,6 +394,8 @@ class MallocExtension final {
   //   back in.
   static void ReleaseMemoryToSystem(size_t num_bytes);
 
+  static size_t ReleaseMemoryToSystemEx(size_t num_bytes, bool force);
+
   struct MemoryLimit {
     // Make a best effort attempt to prevent more than limit bytes of memory
     // from being allocated by the system. In particular, if satisfying a given

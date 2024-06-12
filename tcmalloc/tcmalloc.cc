@@ -304,6 +304,11 @@ ABSL_CONST_INIT static absl::base_internal::SpinLock release_lock(
 
 extern "C" size_t MallocExtension_Internal_ReleaseMemoryToSystem(
     size_t num_bytes) {
+  return MallocExtension_Internal_ReleaseMemoryToSystemEx(num_bytes, false);
+}
+
+extern "C" size_t MallocExtension_Internal_ReleaseMemoryToSystemEx(
+    size_t num_bytes, bool force) {
   // ReleaseMemoryToSystem() might release more than the requested bytes because
   // the page heap releases at the span granularity, and spans are of wildly
   // different sizes.  This keeps track of the extra bytes bytes released so
@@ -314,13 +319,15 @@ extern "C" size_t MallocExtension_Internal_ReleaseMemoryToSystem(
   absl::base_internal::SpinLockHolder rh(&release_lock);
 
   absl::base_internal::SpinLockHolder h(&pageheap_lock);
-  if (num_bytes <= extra_bytes_released) {
-    // We released too much on a prior call, so don't release any
-    // more this time.
-    extra_bytes_released = extra_bytes_released - num_bytes;
-    num_bytes = 0;
-  } else {
-    num_bytes = num_bytes - extra_bytes_released;
+  if (!force) {
+    if (num_bytes <= extra_bytes_released) {
+      // We released too much on a prior call, so don't release any
+      // more this time.
+      extra_bytes_released = extra_bytes_released - num_bytes;
+      num_bytes = 0;
+    } else {
+      num_bytes = num_bytes - extra_bytes_released;
+    }
   }
 
   Length num_pages;

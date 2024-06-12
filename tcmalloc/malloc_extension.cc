@@ -142,6 +142,15 @@ void MallocExtension::ReleaseMemoryToSystem(size_t num_bytes) {
 #endif
 }
 
+size_t MallocExtension::ReleaseMemoryToSystemEx(size_t num_bytes, bool force) {
+#if ABSL_INTERNAL_HAVE_WEAK_MALLOCEXTENSION_STUBS
+  if (&MallocExtension_Internal_ReleaseMemoryToSystemEx != nullptr) {
+    return MallocExtension_Internal_ReleaseMemoryToSystemEx(num_bytes, force);
+  }
+#endif
+  return 0;
+}
+
 AddressRegionFactory* MallocExtension::GetRegionFactory() {
 #if ABSL_INTERNAL_HAVE_WEAK_MALLOCEXTENSION_STUBS
   if (&MallocExtension_Internal_GetRegionFactory == nullptr) {
