@@ -50,7 +50,7 @@ class DeallocationSample final
  public:
   explicit DeallocationSample(DeallocationProfilerList* list, bool seed_with_live_allocs);
   // We define the dtor to ensure it is placed in the desired text section.
-  ~DeallocationSample() override = default;
+  ~DeallocationSample() override;
 
   tcmalloc::Profile Stop() && override;
 
